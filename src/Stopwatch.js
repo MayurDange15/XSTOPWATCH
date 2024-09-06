@@ -1,48 +1,56 @@
-// src/Stopwatch.js
-import React, { useState, useEffect } from 'react';
-// import './Stopwatch.css';
+import "./App.css";
+import React, { useState, useEffect } from "react";
 
 const Stopwatch = () => {
-  const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  // eslint-disable-next-line
-  const [intervalId, setIntervalId] = useState(null);
+  const [time, setTime] = useState(0);
 
   useEffect(() => {
+    let timer;
     if (isRunning) {
-      const id = setInterval(() => {
-        setSeconds((prevSeconds) => prevSeconds + 1);
+      timer = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
       }, 1000);
-      setIntervalId(id);
-
-      // Cleanup function to clear the interval
-      return () => clearInterval(id);
+    } else {
+      clearInterval(timer);
     }
-  }, [isRunning]); // Only re-run effect if isRunning changes
+    return () => clearInterval(timer);
+  }, [isRunning]);
 
-  const handleStartStop = () => {
-    setIsRunning((prevIsRunning) => !prevIsRunning);
+  const startStopwatch = () => {
+    setIsRunning(true);
   };
 
-  const handleReset = () => {
+  const stopStopwatch = () => {
     setIsRunning(false);
-    setSeconds(0);
   };
 
-  const formatTime = (totalSeconds) => {
-    const minutes = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    return `${minutes}:${secs < 10 ? `0${secs}` : secs}`;
+  const resetStopwatch = () => {
+    setTime(0);
+    setIsRunning(false);
+  };
+
+  const formatTime = () => {
+    const minutes = Math.floor(time / 60)
+      .toString()
+      .padStart(1, "0");
+    const seconds = (time % 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
   };
 
   return (
-    <div style={{ textAlign: 'center' }}>
-      <h1>Stopwatch</h1>
-      <div style={{ fontSize: '48px' }}>{formatTime(seconds)}</div>
-      <button onClick={handleStartStop}>
-        {isRunning ? 'Stop' : 'Start'}
-      </button>
-      <button onClick={handleReset}>Reset</button>
+    <div className="stopwatch">
+      <h2>Stopwatch</h2>
+      <div className="time">Time: {formatTime()}</div>
+
+      <div className="buttons">
+        {isRunning ? (
+          <button onClick={stopStopwatch}>Stop</button>
+        ) : (
+          <button onClick={startStopwatch}>Start</button>
+        )}
+        <button onClick={resetStopwatch}>Reset</button>
+      </div>
     </div>
   );
 };
