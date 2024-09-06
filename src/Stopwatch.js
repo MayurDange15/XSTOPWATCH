@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 const Stopwatch = () => {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  // eslint-disable-next-line
   const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
